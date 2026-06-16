@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: 'Learn', href: '/learn/biology', icon: '📚' },
   { label: 'Past Papers', href: '/past-paper', icon: '📄' },
   { label: 'Progress', href: '/dashboard', icon: '📈', tab: 'progress' },
+  { label: 'Revision Plan', href: '/revision', icon: '🗓️' },
   { label: 'Settings', href: '/settings', icon: '⚙️' },
 ]
 

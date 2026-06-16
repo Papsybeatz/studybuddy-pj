@@ -5,6 +5,11 @@ export interface CompletedTopic {
   date: string // ISO date string
 }
 
+export interface StudySessionEntry {
+  topic: string
+  date: string
+}
+
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function getStudentRecord(studentId: string) {
@@ -79,4 +84,35 @@ export function getStudyStreak(studentId: string): number {
   }
 
   return streak
+}
+
+/**
+ * Log a revision study session for a student.
+ * - Appends to student.studySessions
+ * - Marks the topic as "reinforced" in completedTopics if it was already completed
+ * - Updates streak and lastActiveDate
+ */
+export function logStudySession(studentId: string, topic: string): void {
+  const student = getStudentRecord(studentId)
+  const today = new Date().toISOString().split('T')[0]
+
+  if (!student.studySessions) {
+    student.studySessions = []
+  }
+
+  student.studySessions.push({ topic, date: today })
+  student.lastActiveDate = today
+
+  // Mark as reinforced in completedTopics if already present
+  if (student.completedTopics) {
+    const existing = student.completedTopics.find((c) => c.topic === topic)
+    if (existing) {
+      existing.reinforced = true
+    } else {
+      // Also add to completedTopics if not already there
+      student.completedTopics.push({ topic, date: today, reinforced: true })
+    }
+  }
+
+  student.streakCount = getStudyStreak(studentId)
 }

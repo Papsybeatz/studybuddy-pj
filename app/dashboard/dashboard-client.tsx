@@ -281,6 +281,37 @@ export default function DashboardClient({
               </Card>
             </Link>
           </div>
+
+            {/* Revision Plan preview card */}
+            <div className="md:col-span-2 lg:col-span-3">
+              <Card title="Revision Plan" icon="🗓️">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <p className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">
+                        {student.weakAreas.length}
+                      </span>{' '}
+                      weak areas prioritized for today
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">
+                        {getCompletedTopics(student.id).length}
+                      </span>{' '}
+                      topics completed — reinforcement scheduled next week
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      Plan adapts to your streak, difficulty &amp; quiz performance
+                    </p>
+                  </div>
+                  <Link
+                    href="/revision"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow hover:bg-primary-light transition"
+                  >
+                    View Plan →
+                  </Link>
+                </div>
+              </Card>
+            </div>
         )}
 
         {activeTab === 'subjects' && (

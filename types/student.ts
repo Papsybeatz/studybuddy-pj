@@ -1,6 +1,12 @@
 export interface CompletedTopic {
   topic: string
   date: string
+  reinforced?: boolean
+}
+
+export interface StudySession {
+  topic: string
+  date: string
 }
 
 export type QuizDifficulty = 'easy' | 'medium' | 'hard'
@@ -29,4 +35,6 @@ export interface Student {
   lastActiveDate?: string
   streakCount?: number
   quizDifficulty?: QuizDifficulty
+  // Phase 8 — Study Session Logging
+  studySessions?: StudySession[]
 }

@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudyBuddy
 
-## Getting Started
+StudyBuddy is a Next.js learning companion MVP for guided lessons, quizzes, revision planning, past-paper topic extraction, and onboarding-based study personalization.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. The current demo account is Student ID `STU001`, PIN `1234`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verify before a deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+The lint command currently reports one non-blocking image optimization warning in the past-paper preview.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy to Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Import this repository into Vercel.
+2. Set the project root to `studybuddy-pj` if importing from the parent workspace.
+3. Add `AUTH_SECRET` for Production and Preview. Use a long random value, not the local fallback.
+4. Use the default Next.js build command: `npm run build`.
+5. Test login, logout, onboarding, dashboard, lesson, quiz, revision, past-paper, and settings routes on the deployed URL.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Current MVP boundary
 
-## Deploy on Vercel
+This deployment is suitable for a controlled demo or a single-user internal MVP walkthrough. Authentication uses a signed HTTP-only cookie, but student records and progress still use the in-memory mock database in `lib/mockDB.ts`; data is not durable across Vercel instances or deployments.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before inviting multiple external testers, replace the mock database with a hosted database, load the student ID from the authenticated session on every server route, and add ownership checks to all profile/progress writes. The Study MVP agent classes and storage/embedding utilities under `src/` are architectural scaffolds and are not yet connected to live AI or durable document storage.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Recommended tester smoke pass
+
+- Invalid PIN stays on login and shows an error.
+- Valid login reaches the dashboard and creates a session cookie.
+- Direct access to protected routes redirects to login when signed out.
+- Logout clears the session and protected routes redirect again.
+- Onboarding requires a free-text Academic Identity Check response.
+- Completing onboarding shows the exploration badge and subject panel when appropriate.
+- Lesson completion returns to dashboard.
+- Quiz submission shows a score and updates difficulty for the demo process.
+- Revision items can be marked done.
+- Past-paper upload reaches the canned extraction result; live OCR is not implemented yet.
+- `/settings` loads without a 404.

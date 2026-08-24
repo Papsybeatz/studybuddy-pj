@@ -2,34 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { getExplanationStyle, getExampleStyle, getPracticeStyle } from '@/lib/learningStyle'
+import { getExampleStyle } from '@/lib/learningStyle'
 import { getWelcomeMessage } from '@/lib/aiWelcome'
 import { getDailyCheckIn } from '@/lib/checkIn'
 import { getCompletedTopics, getStudyStreak } from '@/lib/progress'
 import StreakDisplay from '@/components/StreakDisplay'
 import Card from '@/components/Card'
 import { getTopicIcon } from '@/lib/topicIcons'
-
-interface Student {
-  id: string
-  name: string
-  courseOfStudy: string
-  subjects: string[]
-  interests: string[]
-  hobbies: string[]
-  learningStyle: string
-  weakAreas: any[]
-  careerHints: string[]
-  lastLogin: Date
-  likedSubjects: string[]
-  dislikedSubjects: string[]
-  lastStudiedSubject?: string
-  upcomingTests?: { subject: string; date: string }[]
-  subjectPreferences?: {
-    liked: string[]
-    disliked: string[]
-  }
-}
+import type { Student } from '@/types/student'
 
 interface DashboardClientProps {
   student: Student
@@ -45,21 +25,37 @@ export default function DashboardClient({
   upcomingTests,
 }: DashboardClientProps) {
   const [activeTab, setActiveTab] = useState('overview')
+  const [identityProfile, setIdentityProfile] = useState<Partial<Student>>({})
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(date))
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(`studybuddy.identity.${student.id}`)
+      if (!raw) {
+        return
+      }
+      const parsed = JSON.parse(raw) as Partial<Student>
+      const timer = window.setTimeout(() => setIdentityProfile(parsed), 0)
+      return () => window.clearTimeout(timer)
+    } catch {
+      return
+    }
+  }, [student.id])
+
+  const personalizedStudent: Student = {
+    ...student,
+    ...identityProfile,
   }
 
-  const firstName = student.name.split(' ')[0]
-  const interests = student.interests.length > 0 ? student.interests[0] : 'learning'
-  const hasOnboardingData = student.interests.length > 0 || student.hobbies.length > 0
+  const firstName = personalizedStudent.name.split(' ')[0]
+  const hasOnboardingData = personalizedStudent.interests.length > 0 || personalizedStudent.hobbies.length > 0
+  const isExploringPath = !!personalizedStudent.careerConfusionFlag || !!personalizedStudent.exploringAlternatives || personalizedStudent.trackConfidenceLevel === 'low'
+  const trackConfidenceLabel = personalizedStudent.trackConfidenceLevel ? `${personalizedStudent.trackConfidenceLevel} confidence` : 'still exploring'
+  const exploreSubjects = [...new Set(['Biology', 'Physics', 'Economics', 'Literature'])]
+    .filter((subject) => !personalizedStudent.likedSubjects.includes(subject))
+    .slice(0, 4)
 
-  const welcomeMessages = getWelcomeMessage(student)
-  const checkInQuestion = getDailyCheckIn(student)
+  const welcomeMessages = getWelcomeMessage(personalizedStudent)
+  const checkInQuestion = getDailyCheckIn(personalizedStudent)
 
   const mainGreeting = welcomeMessages[0] || `Good ${new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, ${firstName}!`
   const subGreetings = welcomeMessages.slice(1)
@@ -146,6 +142,11 @@ export default function DashboardClient({
                     💬 Daily Check-In
                   </p>
                   <p className="text-white/90 text-sm leading-relaxed">{checkInQuestion}</p>
+                </div>
+              )}
+              {isExploringPath && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-100/90 px-3 py-1 text-xs font-semibold text-amber-900">
+                  🧭 You&apos;re still exploring your path · {trackConfidenceLabel}
                 </div>
               )}
             </div>
@@ -257,12 +258,23 @@ export default function DashboardClient({
                 </p>
               </div>
               <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-600 mb-2">How you'll learn:</p>
-                <p className="text-xs text-gray-500">{getExampleStyle(student.learningStyle)}</p>
+                <p className="text-xs text-gray-600 mb-2">How you&apos;ll learn:</p>
+                <p className="text-xs text-gray-500">{getExampleStyle(personalizedStudent.learningStyle)}</p>
               </div>
+              {personalizedStudent.trackChoiceReason && (
+                <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+                  <p className="text-xs font-semibold text-amber-800 uppercase tracking-wide mb-1">Your why</p>
+                  <p className="text-xs text-amber-900 line-clamp-3">{personalizedStudent.trackChoiceReason}</p>
+                </div>
+              )}
             </Card>
 
             <Card title="Career Hints" icon="🎯" className="md:col-span-2">
+              {isExploringPath && (
+                <p className="text-sm text-purple-800 mb-3">
+                  We&apos;ll balance mastery with exploration so you can discover what truly fits you.
+                </p>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {student.careerHints.map((career, index) => (
                   <div
@@ -275,13 +287,34 @@ export default function DashboardClient({
               </div>
             </Card>
 
+            {isExploringPath && (
+              <Card title="Explore Subjects" icon="🧪" className="md:col-span-2 lg:col-span-3">
+                <p className="text-sm text-gray-700 mb-4">
+                  Since you&apos;re still exploring, try short sessions across different subject styles.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {exploreSubjects.map((subject) => {
+                    const slug = subject.toLowerCase().replace(/\s+/g, '-')
+                    return (
+                      <Link
+                        key={subject}
+                        href={`/learn/${slug}`}
+                        className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 hover:bg-amber-100 transition"
+                      >
+                        <p className="text-sm font-semibold text-amber-900">{subject}</p>
+                        <p className="text-xs text-amber-800 mt-1">Try a short guided practice</p>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </Card>
+            )}
+
             <Link href="/past-paper" className="block">
               <Card title="Upload Past Paper" icon="📄" className="hover:shadow-md transition cursor-pointer h-full">
                 <p className="text-sm text-gray-600">Upload a PDF or image to extract questions and detect weak areas</p>
               </Card>
             </Link>
-          </div>
-
             {/* Revision Plan preview card */}
             <div className="md:col-span-2 lg:col-span-3">
               <Card title="Revision Plan" icon="🗓️">
@@ -312,6 +345,7 @@ export default function DashboardClient({
                 </div>
               </Card>
             </div>
+          </div>
         )}
 
         {activeTab === 'subjects' && (

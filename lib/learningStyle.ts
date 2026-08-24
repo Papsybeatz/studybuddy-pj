@@ -1,5 +1,3 @@
-type LearningStyle = 'visual' | 'hands-on' | 'reading-based'
-
 export function getExplanationStyle(style: string): string {
   switch (style.toLowerCase()) {
     case 'visual':

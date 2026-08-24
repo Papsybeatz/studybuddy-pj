@@ -4,6 +4,7 @@ export interface OcrResult {
 }
 
 export function extractTextFromFile(file: File): Promise<OcrResult> {
+  void file
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({

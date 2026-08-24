@@ -44,8 +44,8 @@ export default async function DashboardPage() {
 
   const subjects = getSubjectsForCourse(student.courseOfStudy)
 
-  const lastStudiedSubject = (student as any).lastStudiedSubject || student.likedSubjects?.[0] || subjects[0]
-  const upcomingTests = (student as any).upcomingTests || []
+  const lastStudiedSubject = student.lastStudiedSubject || student.likedSubjects?.[0] || subjects[0]
+  const upcomingTests = student.upcomingTests || []
 
   return (
     <Suspense fallback={<DashboardSkeleton />}>

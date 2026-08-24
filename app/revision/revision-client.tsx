@@ -134,7 +134,6 @@ function Toast({ message, visible }: { message: string; visible: boolean }) {
 export default function RevisionClient({ student, initialPlan }: RevisionClientProps) {
   const [plan, setPlan] = useState<RevisionPlan>(initialPlan)
   const [toast, setToast] = useState({ visible: false, message: '' })
-  const [doneSlugs, setDoneSlugs] = useState<Set<string>>(new Set())
 
   const showToast = useCallback((message: string) => {
     setToast({ visible: true, message })
@@ -144,13 +143,11 @@ export default function RevisionClient({ student, initialPlan }: RevisionClientP
   const handleRegenerate = () => {
     const freshPlan = generateRevisionPlan(student)
     setPlan(freshPlan)
-    setDoneSlugs(new Set())
     showToast('Plan updated based on your latest progress!')
   }
 
   const handleDone = useCallback(
     (slug: string) => {
-      setDoneSlugs((prev) => new Set(prev).add(slug))
       showToast(`"${slug.replace(/-/g, ' ')}" logged as studied!`)
     },
     [showToast]

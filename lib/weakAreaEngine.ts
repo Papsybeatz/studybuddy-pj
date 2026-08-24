@@ -1,5 +1,4 @@
 import type { Student } from '@/types/student'
-import { extractTopics } from '@/lib/topicExtractor'
 
 export interface WeakAreaResult {
   detectedTopics: string[]

@@ -6,27 +6,7 @@ import Link from 'next/link'
 import { updateLastStudiedSubject } from '@/lib/mockDB'
 import { markTopicCompleted } from '@/lib/progress'
 import { getTopicIcon } from '@/lib/topicIcons'
-
-interface Student {
-  id: string
-  name: string
-  courseOfStudy: string
-  subjects: string[]
-  interests: string[]
-  hobbies: string[]
-  learningStyle: string
-  weakAreas: any[]
-  careerHints: string[]
-  lastLogin: Date
-  likedSubjects: string[]
-  dislikedSubjects: string[]
-  lastStudiedSubject?: string
-  upcomingTests?: { subject: string; date: string }[]
-  subjectPreferences?: {
-    liked: string[]
-    disliked: string[]
-  }
-}
+import type { Student } from '@/types/student'
 
 interface Lesson {
   title: string

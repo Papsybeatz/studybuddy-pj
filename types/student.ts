@@ -19,7 +19,7 @@ export interface Student {
   interests: string[]
   hobbies: string[]
   learningStyle: string
-  weakAreas: any[]
+  weakAreas: string[]
   careerHints: string[]
   lastLogin: Date
   likedSubjects: string[]
@@ -37,4 +37,10 @@ export interface Student {
   quizDifficulty?: QuizDifficulty
   // Phase 8 — Study Session Logging
   studySessions?: StudySession[]
+  trackChoiceReason?: string
+  trackConfidenceLevel?: 'low' | 'medium' | 'high'
+  parentInfluence?: boolean
+  selfDirection?: boolean
+  careerConfusionFlag?: boolean
+  exploringAlternatives?: boolean
 }

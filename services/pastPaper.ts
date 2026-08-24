@@ -9,6 +9,7 @@ export interface PastPaperResult {
 }
 
 export function processPastPaper(file: File): PastPaperResult {
+  void file
   return {
     extractedQuestions: [
       { question: 'Explain photosynthesis and its importance to plants.', topic: 'Biology' },

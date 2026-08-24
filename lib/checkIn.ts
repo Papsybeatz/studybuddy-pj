@@ -3,8 +3,18 @@ import type { Student } from '@/types/student'
 export function getDailyCheckIn(student: Student): string {
   const interest = student.interests[0]
   const weakArea = student.weakAreas?.[0]
-  const lastSubject = (student as any).lastStudiedSubject || student.likedSubjects?.[0] || student.subjects?.[0]
-  const upcomingTests = (student as any).upcomingTests || []
+  const lastSubject = student.lastStudiedSubject || student.likedSubjects?.[0] || student.subjects?.[0]
+  const upcomingTests = student.upcomingTests || []
+  const firstName = student.name.split(' ')[0]
+
+  if (student.careerConfusionFlag || student.exploringAlternatives) {
+    const recommended = student.dislikedSubjects?.[0] || lastSubject || 'Biology'
+    return `${firstName}, since you're still exploring science, want to try a short ${recommended} practice today?`
+  }
+
+  if (student.parentInfluence && !student.selfDirection) {
+    return `${firstName}, you shared that this path feels pressured sometimes. Want one confidence-building win today?`
+  }
 
   if (upcomingTests.length > 0) {
     const nextTest = upcomingTests[0]

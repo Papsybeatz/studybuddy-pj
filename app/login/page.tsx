@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { authenticate } from '@/services/auth'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,9 +17,14 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const result = await authenticate({ studentID, pin })
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentID, pin }),
+      })
+      const result = await response.json() as { student?: unknown; error?: string }
 
-      if (result.success && result.student) {
+      if (response.ok && result.student) {
         router.push('/dashboard')
       } else {
         setError(result.error || 'Authentication failed')

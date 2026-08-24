@@ -7,6 +7,7 @@ import StreakDisplay from '@/components/StreakDisplay'
 
 const NAV_LINKS = [
   { label: 'Dashboard', href: '/dashboard', icon: '🏠' },
+  { label: 'Study MVP', href: '/study-mvp', icon: '🧠' },
   { label: 'Learn', href: '/learn/biology', icon: '📚' },
   { label: 'Past Papers', href: '/past-paper', icon: '📄' },
   { label: 'Progress', href: '/dashboard', icon: '📈', tab: 'progress' },
@@ -106,7 +107,7 @@ export default function AppShell({ children }: AppShellProps) {
               {diff} difficulty
             </span>
             <Link
-              href="/login"
+              href="/api/auth/logout"
               className="text-xs text-gray-400 hover:text-gray-600 transition"
             >
               Sign out

@@ -118,16 +118,6 @@ export function getAllStudents(): Student[] {
   return mockStudents
 }
 
-/**
- * Update the lastStudiedSubject field for a student (used by learn-client).
- */
-export function updateLastStudiedSubject(studentId: string, subject: string): void {
-  const student = mockStudents.find((s) => s.id === studentId)
-  if (student) {
-    student.lastStudiedSubject = subject
-  }
-}
-
 
 export function updateStudentProfile(id: string, data: Partial<Student>): Student | undefined {
   const studentIndex = mockStudents.findIndex((student) => student.id === id)

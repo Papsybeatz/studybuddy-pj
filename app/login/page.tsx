@@ -37,22 +37,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">StudyBuddy</h1>
-          <p className="text-gray-600">Sign in to continue your learning journey</p>
+    <main className="login-page flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
+      <div className="login-card w-full max-w-md rounded-2xl bg-white p-7 sm:p-9">
+        <div className="mb-8 text-center">
+          <div className="mb-5 flex flex-col items-center">
+            <div className="studybuddy-mark" aria-label="StudyBuddy logo">
+              <span>SB</span>
+            </div>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#1C3F7C]">
+              Study Smarter. Learn Faster.
+            </p>
+          </div>
+          <h1 className="font-merriweather text-3xl font-bold text-[#0A1A3A] sm:text-[2rem]">
+            Welcome to StudyBuddy
+          </h1>
+          <p className="mt-3 text-sm text-slate-600">Sign in to continue your learning journey.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="studentID" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="studentID" className="mb-2 block text-sm font-medium text-[#0A1A3A]">
               Student ID
             </label>
             <input
@@ -60,14 +70,14 @@ export default function LoginPage() {
               type="text"
               value={studentID}
               onChange={(e) => setStudentID(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-              placeholder="e.g. STU001"
+              className="academic-input w-full rounded-lg px-4 py-3 text-sm text-[#0A1A3A] outline-none transition"
+              placeholder="e.g., STU001"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="pin" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="pin" className="mb-2 block text-sm font-medium text-[#0A1A3A]">
               PIN
             </label>
             <input
@@ -75,7 +85,7 @@ export default function LoginPage() {
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+              className="academic-input w-full rounded-lg px-4 py-3 text-sm text-[#0A1A3A] outline-none transition"
               placeholder="Enter your PIN"
               maxLength={10}
               required
@@ -85,19 +95,29 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary hover:bg-primary-light text-white font-medium py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="academic-button w-full rounded-lg px-4 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>Demo credentials: STU001 - 1234</p>
-          <Link href="/" className="text-primary hover:text-primary-light mt-2 inline-block">
+        <div className="demo-panel mt-7 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <span className="demo-badge shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em]">
+              Demo Mode
+            </span>
+            <p className="text-sm leading-5 text-[#0A1A3A]">
+              Student ID <strong>STU001</strong> <span className="text-slate-400">|</span> PIN <strong>1234</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 text-center">
+          <Link href="/" className="text-sm font-medium text-[#1C3F7C] underline-offset-4 transition hover:text-[#D4AF37] hover:underline">
             Back to home
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

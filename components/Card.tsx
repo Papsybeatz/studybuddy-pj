@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 interface CardProps {
   title: string
   children: ReactNode
-  /** Optional emoji or JSX icon shown to the left of the title */
+  /** Optional icon shown to the left of the title */
   icon?: ReactNode
   className?: string
 }
@@ -11,11 +11,11 @@ interface CardProps {
 export default function Card({ title, children, icon, className = '' }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-xl shadow-sm border border-gray-100 p-6 ${className}`}
+      className={`academic-card bg-white rounded-xl p-6 ${className}`}
     >
       <div className="flex items-center gap-2 mb-4">
         {icon && <span className="text-xl leading-none">{icon}</span>}
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <h3 className="font-merriweather text-lg font-bold text-[#0A1A3A]">{title}</h3>
       </div>
       {children}
     </div>

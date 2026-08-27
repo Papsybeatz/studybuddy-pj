@@ -1,6 +1,7 @@
 'use client'
 
 import { getStudyStreak } from '@/lib/progress'
+import AcademicIcon from '@/components/AcademicIcon'
 
 interface StreakDisplayProps {
   studentId: string
@@ -12,24 +13,26 @@ export default function StreakDisplay({ studentId, compact = false }: StreakDisp
 
   if (compact) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600">
-        <span aria-hidden="true">🔥</span>
+      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0A1A3A]">
+        <AcademicIcon name="bolt" size={16} className="text-[#D4AF37]" />
         {streak} day{streak !== 1 ? 's' : ''}
       </span>
     )
   }
 
   return (
-    <div className="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-xl px-5 py-4">
-      <span className="text-3xl select-none" aria-hidden="true">🔥</span>
+    <div className="streak-panel flex items-center gap-3 rounded-xl px-5 py-4">
+      <span className="grid h-11 w-11 place-items-center rounded-full bg-[#D4AF37]/20 text-[#B78900]">
+        <AcademicIcon name="bolt" size={24} />
+      </span>
       <div>
-        <p className="text-lg font-bold text-orange-700">
+        <p className="font-merriweather text-lg font-bold text-[#0A1A3A]">
           {streak} day{streak !== 1 ? 's' : ''} streak
         </p>
         {streak > 0 ? (
-          <p className="text-sm text-orange-500">Keep it up!</p>
+          <p className="text-sm text-[#7A5B00]">Keep it up!</p>
         ) : (
-          <p className="text-sm text-orange-400">Come back tomorrow to start your streak.</p>
+          <p className="text-sm text-[#7A5B00]">Come back tomorrow to start your streak.</p>
         )}
       </div>
     </div>

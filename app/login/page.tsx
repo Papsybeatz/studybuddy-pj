@@ -44,13 +44,14 @@ export default function LoginPage() {
             <div className="studybuddy-mark" aria-label="StudyBuddy logo">
               <span>SB</span>
             </div>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#1C3F7C]">
-              Study Smarter. Learn Faster.
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1C3F7C]">
+              Pope John Senior High School · Ghana
             </p>
           </div>
           <h1 className="font-merriweather text-3xl font-bold text-[#0A1A3A] sm:text-[2rem]">
             Welcome to StudyBuddy
           </h1>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B78900]">Study Smarter. Learn Faster.</p>
           <p className="mt-3 text-sm text-slate-600">Sign in to continue your learning journey.</p>
         </div>
 

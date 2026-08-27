@@ -9,7 +9,7 @@
   --color-secondary-light: #67e8f9;
   --color-accent: #f59e0b;
   --color-accent-light: #fcd34d;
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-inter), var(--font-geist-sans), sans-serif;
 }
@@ -141,4 +141,40 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
+}
+
+.academic-header {
+  background: linear-gradient(105deg, #0a1a3a 0%, #1c3f7c 100%);
+  border-color: rgba(212, 175, 55, 0.45);
+}
+
+.academic-card {
+  border: 1px solid rgba(28, 63, 124, 0.12);
+  border-top: 3px solid #d4af37;
+  box-shadow: 0 10px 24px rgba(10, 26, 58, 0.06);
+}
+
+.academic-card:hover {
+  box-shadow: 0 14px 30px rgba(10, 26, 58, 0.1);
+}
+
+.subject-row {
+  border: 1px solid rgba(28, 63, 124, 0.1);
+  background: #f8fafc;
+}
+
+.test-row {
+  border: 1px solid rgba(28, 63, 124, 0.12);
+  background: #f8fafc;
+}
+
+.date-badge {
+  color: #7a5b00;
+  background: #f3d978;
+}
+
+.streak-panel {
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  background: #fff9e8;
+  box-shadow: 0 8px 20px rgba(10, 26, 58, 0.08);
 }

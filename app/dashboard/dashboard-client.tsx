@@ -8,7 +8,7 @@ import { getDailyCheckIn } from '@/lib/checkIn'
 import { getCompletedTopics, getStudyStreak } from '@/lib/progress'
 import StreakDisplay from '@/components/StreakDisplay'
 import Card from '@/components/Card'
-import { getTopicIcon } from '@/lib/topicIcons'
+import AcademicIcon, { type AcademicIconName } from '@/components/AcademicIcon'
 import type { Student } from '@/types/student'
 
 interface DashboardClientProps {
@@ -53,6 +53,16 @@ export default function DashboardClient({
   const exploreSubjects = [...new Set(['Biology', 'Physics', 'Economics', 'Literature'])]
     .filter((subject) => !personalizedStudent.likedSubjects.includes(subject))
     .slice(0, 4)
+
+  const getAcademicIcon = (value: string): AcademicIconName => {
+    const key = value.toLowerCase()
+    if (key.includes('physics')) return 'bolt'
+    if (key.includes('chemistry') || key.includes('biology')) return 'beaker'
+    if (key.includes('math') || key.includes('calculus') || key.includes('algebra')) return 'chart'
+    if (key.includes('test') || key.includes('date')) return 'calendar'
+    if (key.includes('career')) return 'target'
+    return 'book'
+  }
 
   const welcomeMessages = getWelcomeMessage(personalizedStudent)
   const checkInQuestion = getDailyCheckIn(personalizedStudent)
@@ -139,14 +149,14 @@ export default function DashboardClient({
               {hasOnboardingData && (
                 <div className="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 inline-block max-w-lg">
                   <p className="text-xs font-semibold text-white/60 uppercase tracking-wide mb-1">
-                    💬 Daily Check-In
+                    Daily Check-In
                   </p>
                   <p className="text-white/90 text-sm leading-relaxed">{checkInQuestion}</p>
                 </div>
               )}
               {isExploringPath && (
                 <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-100/90 px-3 py-1 text-xs font-semibold text-amber-900">
-                  🧭 You&apos;re still exploring your path · {trackConfidenceLabel}
+                  <AcademicIcon name="compass" size={14} /> You&apos;re still exploring your path · {trackConfidenceLabel}
                 </div>
               )}
             </div>
@@ -179,36 +189,39 @@ export default function DashboardClient({
 
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card title="Your Subjects" icon="📘">
+            <Card title="Your Subjects" icon={<AcademicIcon name="book" className="text-[#D4AF37]" />}>
               <div className="space-y-2">
-                {subjects.map((subject) => (
+                {subjects.map((subject, index) => (
                   <div
                     key={subject}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="subject-row rounded-lg p-3"
                   >
                     <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                      <span className="text-base leading-none">{getTopicIcon(subject)?.emoji ?? '📖'}</span>
+                      <span className="grid h-8 w-8 place-items-center rounded-md bg-[#0A1A3A] text-[#F3D978]"><AcademicIcon name={getAcademicIcon(subject)} size={16} /></span>
                       {subject}
                     </span>
-                    <span className="text-xs text-gray-500">Active</span>
+                    <span className="flex items-center gap-2 text-xs font-semibold text-[#1C3F7C]">
+                      <span className="hidden h-1.5 w-12 overflow-hidden rounded-full bg-slate-200 sm:block"><span className="block h-full rounded-full bg-[#D4AF37]" style={{ width: `${Math.max(28, 72 - index * 9)}%` }} /></span>
+                      Active
+                    </span>
                   </div>
                 ))}
               </div>
             </Card>
 
-            <Card title="Weak Areas" icon="⚠️">
+            <Card title="Weak Areas" icon={<AcademicIcon name="warning" className="text-[#D4AF37]" />}>
+              <p className="mb-3 text-xs leading-5 text-slate-500">Recommended next steps are prioritized from your recent study signals.</p>
               <div className="flex flex-wrap gap-2">
                 {student.weakAreas.length > 0 ? (
                   student.weakAreas.map((area, index) => {
                     const topicSlug = typeof area === 'string' ? area.toLowerCase().replace(/\s+/g, '-') : `area-${index + 1}`
-                    const iconInfo = getTopicIcon(topicSlug)
                     return (
                       <Link
                         key={index}
                         href={`/learn/${topicSlug}`}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-sm rounded-full border border-red-100 hover:bg-red-100 transition"
+                        className="flex items-center gap-2 rounded-lg border border-[#D4AF37]/40 bg-[#FFF9E8] px-3 py-2 text-sm text-[#0A1A3A] transition hover:border-[#D4AF37]"
                       >
-                        {iconInfo && <span className="leading-none">{iconInfo.emoji}</span>}
+                        <AcademicIcon name={getAcademicIcon(topicSlug)} size={15} className="text-[#B78900]" />
                         {typeof area === 'string' ? area : 'Area ' + (index + 1)}
                       </Link>
                     )
@@ -224,13 +237,13 @@ export default function DashboardClient({
               )}
             </Card>
 
-            <Card title="Upcoming Tests" icon="📅">
+            <Card title="Upcoming Tests" icon={<AcademicIcon name="calendar" className="text-[#D4AF37]" />}>
               <div className="space-y-2">
                 {upcomingTests.length > 0 ? (
                   upcomingTests.map((test, index) => (
-                    <div key={index} className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                      <p className="text-sm font-medium text-blue-800">{test.subject}</p>
-                      <p className="text-xs text-blue-600 mt-1">
+                    <div key={index} className="test-row rounded-lg p-3">
+                      <div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold text-[#0A1A3A]">{test.subject}</p><span className="date-badge rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide">{new Date(test.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span></div>
+                      <p className="mt-2 text-xs text-slate-500">
                         {new Date(test.date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -241,14 +254,14 @@ export default function DashboardClient({
                   ))
                 ) : (
                   <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                    <p className="text-sm font-medium text-blue-800">No upcoming tests</p>
-                    <p className="text-xs text-blue-600 mt-1">Check back later</p>
+                    <p className="text-sm font-medium text-[#0A1A3A]">No upcoming tests</p>
+                    <p className="mt-1 text-xs text-slate-500">Check back later</p>
                   </div>
                 )}
               </div>
             </Card>
 
-            <Card title="Continue Learning" icon="🚀">
+            <Card title="Continue Learning" icon={<AcademicIcon name="lightbulb" className="text-[#D4AF37]" />}>
               <div className={`p-3 border rounded-lg ${getColorClasses(continueLearning.color)}`}>
                 <p className={`text-sm font-medium ${getTextColorClasses(continueLearning.color)}`}>
                   {continueLearning.title}
@@ -269,7 +282,7 @@ export default function DashboardClient({
               )}
             </Card>
 
-            <Card title="Career Hints" icon="🎯" className="md:col-span-2">
+            <Card title="Career Hints" icon={<AcademicIcon name="target" className="text-[#D4AF37]" />} className="md:col-span-2">
               {isExploringPath && (
                 <p className="text-sm text-purple-800 mb-3">
                   We&apos;ll balance mastery with exploration so you can discover what truly fits you.
@@ -288,7 +301,7 @@ export default function DashboardClient({
             </Card>
 
             {isExploringPath && (
-              <Card title="Explore Subjects" icon="🧪" className="md:col-span-2 lg:col-span-3">
+              <Card title="Explore Subjects" icon={<AcademicIcon name="compass" className="text-[#D4AF37]" />} className="md:col-span-2 lg:col-span-3">
                 <p className="text-sm text-gray-700 mb-4">
                   Since you&apos;re still exploring, try short sessions across different subject styles.
                 </p>
@@ -311,13 +324,13 @@ export default function DashboardClient({
             )}
 
             <Link href="/past-paper" className="block">
-              <Card title="Upload Past Paper" icon="📄" className="hover:shadow-md transition cursor-pointer h-full">
+              <Card title="Upload Past Paper" icon={<AcademicIcon name="folder" className="text-[#D4AF37]" />} className="hover:shadow-md transition cursor-pointer h-full">
                 <p className="text-sm text-gray-600">Upload a PDF or image to extract questions and detect weak areas</p>
               </Card>
             </Link>
             {/* Revision Plan preview card */}
             <div className="md:col-span-2 lg:col-span-3">
-              <Card title="Revision Plan" icon="🗓️">
+              <Card title="Revision Plan" icon={<AcademicIcon name="calendar" className="text-[#D4AF37]" />}>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <p className="text-sm text-gray-600">
@@ -349,7 +362,7 @@ export default function DashboardClient({
         )}
 
         {activeTab === 'subjects' && (
-          <Card title="All Subjects" icon="📚">
+          <Card title="All Subjects" icon={<AcademicIcon name="book" className="text-[#D4AF37]" />}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {subjects.map((subject) => (
                 <div
@@ -357,7 +370,7 @@ export default function DashboardClient({
                   className="p-4 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition"
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl leading-none">{getTopicIcon(subject)?.emoji ?? '📖'}</span>
+                    <AcademicIcon name={getAcademicIcon(subject)} className="text-[#B78900]" />
                     <h4 className="font-medium text-gray-900">{subject}</h4>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Click to view materials</p>
@@ -374,17 +387,17 @@ export default function DashboardClient({
 
             {/* ─── Summary cards ─────────────────────────────── */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <Card title="Topics Completed" icon="✅" className="text-center">
+              <Card title="Topics Completed" icon={<AcademicIcon name="check" className="text-[#D4AF37]" />} className="text-center">
                 <p className="text-4xl font-bold text-primary mt-1">
                   {getCompletedTopics(student.id).length}
                 </p>
               </Card>
-              <Card title="Day Streak" icon="🔥" className="text-center">
+              <Card title="Day Streak" icon={<AcademicIcon name="bolt" className="text-[#D4AF37]" />} className="text-center">
                 <p className="text-4xl font-bold text-orange-500 mt-1">
                   {getStudyStreak(student.id)}
                 </p>
               </Card>
-              <Card title="Quiz Difficulty" icon="🎯" className="text-center">
+              <Card title="Quiz Difficulty" icon={<AcademicIcon name="target" className="text-[#D4AF37]" />} className="text-center">
                 <p className="text-4xl font-bold text-purple-600 capitalize mt-1">
                   {student.quizDifficulty ?? 'easy'}
                 </p>
@@ -392,7 +405,7 @@ export default function DashboardClient({
             </div>
 
             {/* ─── Progress bar ───────────────────────────────── */}
-            <Card title="Overall Progress" icon="📊">
+            <Card title="Overall Progress" icon={<AcademicIcon name="chart" className="text-[#D4AF37]" />}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-500">
                   {Math.min(getCompletedTopics(student.id).length, 10)} / 10 topics
@@ -409,7 +422,7 @@ export default function DashboardClient({
             </Card>
 
             {/* ─── Completed topics list ──────────────────────── */}
-            <Card title="Completed Topics" icon="🏆">
+            <Card title="Completed Topics" icon={<AcademicIcon name="crown" className="text-[#D4AF37]" />}>
               {getCompletedTopics(student.id).length === 0 ? (
                 <p className="text-sm text-gray-500">
                   No topics completed yet. Start learning to track your progress!
@@ -419,7 +432,7 @@ export default function DashboardClient({
                   {[...getCompletedTopics(student.id)].reverse().map((entry, idx) => (
                     <li key={idx} className="py-3 flex items-center justify-between">
                       <span className="flex items-center gap-2 text-sm font-medium text-gray-800 capitalize">
-                        <span>{getTopicIcon(entry.topic)?.emoji ?? '📖'}</span>
+                        <AcademicIcon name={getAcademicIcon(entry.topic)} size={16} className="text-[#B78900]" />
                         {entry.topic.replace(/-/g, ' ')}
                       </span>
                       <span className="text-xs text-gray-400">{entry.date}</span>
@@ -432,7 +445,7 @@ export default function DashboardClient({
         )}
 
         {activeTab === 'settings' && (
-          <Card title="Settings" icon="⚙️">
+          <Card title="Settings" icon={<AcademicIcon name="settings" className="text-[#D4AF37]" />}>
             <p className="text-gray-600">Manage your account preferences and learning style.</p>
           </Card>
         )}

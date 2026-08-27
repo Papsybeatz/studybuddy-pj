@@ -4,15 +4,16 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { getStudentById } from '@/lib/mockDB'
 import StreakDisplay from '@/components/StreakDisplay'
+import AcademicIcon from '@/components/AcademicIcon'
 
 const NAV_LINKS = [
-  { label: 'Dashboard', href: '/dashboard', icon: '🏠' },
-  { label: 'Study MVP', href: '/study-mvp', icon: '🧠' },
-  { label: 'Learn', href: '/learn/biology', icon: '📚' },
-  { label: 'Past Papers', href: '/past-paper', icon: '📄' },
-  { label: 'Progress', href: '/dashboard', icon: '📈', tab: 'progress' },
-  { label: 'Revision Plan', href: '/revision', icon: '🗓️' },
-  { label: 'Settings', href: '/settings', icon: '⚙️' },
+  { label: 'Dashboard', href: '/dashboard', icon: 'graduation' as const },
+  { label: 'Study MVP', href: '/study-mvp', icon: 'lightbulb' as const },
+  { label: 'Learn', href: '/learn/biology', icon: 'book' as const },
+  { label: 'Past Papers', href: '/past-paper', icon: 'folder' as const },
+  { label: 'Progress', href: '/dashboard', icon: 'chart' as const, tab: 'progress' },
+  { label: 'Revision Plan', href: '/revision', icon: 'calendar' as const },
+  { label: 'Settings', href: '/settings', icon: 'settings' as const },
 ]
 
 // Pages that should NOT show the shell (full-page auth flows)
@@ -45,12 +46,13 @@ export default function AppShell({ children }: AppShellProps) {
       {/* ── Sidebar ───────────────────────────────────── */}
       <aside className="w-56 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-gray-100 flex items-center gap-2">
-          <span className="text-2xl select-none">🎓</span>
-          <span className="text-lg font-bold tracking-tight">
-            <span className="text-primary">Study</span>
-            <span className="text-secondary">Buddy</span>
-          </span>
+        <div className="border-b border-[#D4AF37]/30 bg-[#0A1A3A] px-5 py-5 text-white">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-lg border border-[#D4AF37]/70 text-[#F3D978]"><AcademicIcon name="graduation" size={24} /></span>
+            <span className="font-merriweather text-base font-bold tracking-tight">StudyBuddy</span>
+          </div>
+          <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#F3D978]">Pope John SHS</p>
+          <p className="mt-1 text-[11px] leading-4 text-white/65">Student learning portal</p>
         </div>
 
         {/* Nav links */}
@@ -70,7 +72,7 @@ export default function AppShell({ children }: AppShellProps) {
                     : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >
-                <span className="text-base leading-none">{icon}</span>
+                <AcademicIcon name={icon} size={18} />
                 {label}
               </Link>
             )
@@ -94,11 +96,11 @@ export default function AppShell({ children }: AppShellProps) {
       {/* ── Right panel ────────────────────────────────── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
-          <p className="text-sm text-gray-500">
-            Welcome back,{' '}
-            <span className="font-semibold text-gray-900">{student.name}</span>
-          </p>
+        <header className="academic-header border-b px-6 py-4 flex items-center justify-between flex-shrink-0">
+          <div>
+            <p className="font-merriweather text-sm font-bold text-white">Pope John Senior High School</p>
+            <p className="mt-0.5 text-xs text-white/65">StudyBuddy Portal · Welcome back, <span className="font-semibold text-[#F3D978]">{student.name}</span></p>
+          </div>
           <div className="flex items-center gap-4">
             <StreakDisplay studentId={student.id} compact />
             <span

@@ -23,8 +23,8 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "StudyBuddy",
-  description: "Your personal AI learning companion",
+  title: "StudyBuddy | Pope John Senior High School",
+  description: "The Pope John Senior High School learning portal",
 };
 
 export default function RootLayout({

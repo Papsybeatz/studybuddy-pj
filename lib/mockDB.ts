@@ -3,7 +3,7 @@ import { Student } from '@/types/student'
 export const mockStudents: Student[] = [
   {
     id: 'STU001',
-    name: 'Kwame Mensah',
+    name: 'Kwadwo Asare',
     courseOfStudy: 'Science',
     subjects: ['Biology', 'Chemistry', 'Physics', 'Elective Math', 'Core Math'],
     interests: ['Technology', 'Research', 'Problem Solving'],

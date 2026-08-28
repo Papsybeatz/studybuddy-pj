@@ -280,6 +280,9 @@ export default function DashboardClient({
                   <p className="text-xs text-amber-900 line-clamp-3">{personalizedStudent.trackChoiceReason}</p>
                 </div>
               )}
+              <Link href="/continue-learning" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#1C3F7C] underline-offset-4 hover:text-[#B78900] hover:underline">
+                Resume session history <AcademicIcon name="bolt" size={15} />
+              </Link>
             </Card>
 
             <Card title="Career Hints" icon={<AcademicIcon name="target" className="text-[#D4AF37]" />} className="md:col-span-2">

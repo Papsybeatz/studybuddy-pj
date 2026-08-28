@@ -9,7 +9,7 @@ import AcademicIcon from '@/components/AcademicIcon'
 const NAV_LINKS = [
   { label: 'Dashboard', href: '/dashboard', icon: 'graduation' as const },
   { label: 'Study MVP', href: '/study-mvp', icon: 'lightbulb' as const },
-  { label: 'Learn', href: '/learn/biology', icon: 'book' as const },
+  { label: 'Learn', href: '/learn', icon: 'book' as const },
   { label: 'Past Papers', href: '/past-paper', icon: 'folder' as const },
   { label: 'Progress', href: '/dashboard', icon: 'chart' as const, tab: 'progress' },
   { label: 'Revision Plan', href: '/revision', icon: 'calendar' as const },
@@ -61,7 +61,7 @@ export default function AppShell({ children }: AppShellProps) {
             const isActive =
               pathname === href ||
               (href !== '/dashboard' && !href.includes('/learn/') && pathname.startsWith(href)) ||
-              (href === '/learn/biology' && pathname.startsWith('/learn'))
+              (href === '/learn' && pathname.startsWith('/learn'))
             return (
               <Link
                 key={label}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { updateLastStudiedSubject } from '@/lib/mockDB'
@@ -29,6 +29,19 @@ export default function LearnClient({ student, topic, lesson, questions }: Learn
   const router = useRouter()
   const [showAnswers, setShowAnswers] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
+
+  useEffect(() => {
+    try {
+      const key = `studybuddy.sessions.${student.id}`
+      const saved = JSON.parse(localStorage.getItem(key) || '[]') as { subject: string; topic: string; progress: number; date: string }[]
+      const formattedTopic = topic.replace(/-/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase())
+      const subject = student.subjects.find((item) => formattedTopic.toLowerCase().includes(item.toLowerCase().split(' ')[0])) || student.subjects[0] || 'General Studies'
+      const next = [{ subject, topic: formattedTopic, progress: 20, date: new Date().toISOString() }, ...saved.filter((session) => session.topic !== formattedTopic)].slice(0, 3)
+      localStorage.setItem(key, JSON.stringify(next))
+    } catch {
+      // Session history is optional in simulation mode.
+    }
+  }, [student.id, student.subjects, topic])
 
   const handleMarkCompleted = () => {
     updateLastStudiedSubject(student.id, topic)
